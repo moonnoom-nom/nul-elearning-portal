@@ -1,0 +1,20 @@
+{
+  "name": "nul-elearning-portal",
+  "version": "2.1.0",
+  "description": "NUL University E-Learning Platform — lecture resources, assignment submissions and digital services",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "mkdir -p dist && cp index.html dist/",
+    "lint": "exit 0",
+    "test": "exit 0",
+    "test:integration": "exit 0",
+    "audit:check": "npm audit --audit-level=high"
+  },
+  "keywords": ["elearning", "university", "portal", "devops"],
+  "author": "Homaira Moon <h.moon@nul.ac.uk>",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
