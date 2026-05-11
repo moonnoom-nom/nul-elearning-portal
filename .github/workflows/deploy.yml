@@ -92,36 +92,37 @@ jobs:
       - name: Confirm test completion
         run: echo "Automated test stage completed successfully."
 
-  security:
+    
+ security:
     name: Security
     runs-on: ubuntu-latest
     needs: test
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Restore npm cache
-        uses: actions/cache@v4
+      - run: npm install
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high || true
+
+      - name: Secret scanning
+        uses: trufflesecurity/trufflehog@main
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          path: ./
+          base: main
+          extra_args: --only-verified
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install Pa11y
+        run: npm install -g pa11y
 
-      - name: Run dependency audit
-        run: npm run audit:check || true
-
-      - name: Confirm security stage
-        run: echo "Security audit stage completed."
+      - name: Accessibility check
+        run: |
+          pa11y ./index.html --standard WCAG2AA --reporter cli || true
 
   deploy:
     name: Deploy
